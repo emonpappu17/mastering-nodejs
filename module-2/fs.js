@@ -24,29 +24,55 @@
 
 const fs = require('fs');
 
-console.log('task-1');
+// console.log('task-1');
 
 let text = 'node js';
 
-fs.writeFile("./hello-world.txt", text, { encoding: 'utf-8' }, (err) => {
-    if (err) {
-        console.log('something went wrong', err);
-        return;
-    }
-    console.log('write successfully');
-    // console.log('After writing:', data);
+// fs.readFile('./hello-world.txt', { encoding: 'utf-8' }, (err, data) => {
+//     if (err) {
+//         console.log('something went wrong', err);
+//         return;
+//     }
+
+//     fs.writeFile("./hello.txt", data, { encoding: 'utf-8' }, (err) => {
+//         if (err) {
+//             console.log('something went wrong', err);
+//             return;
+//         }
+//         console.log('written successfully');
+//     })
+// });
+
+const readStream = fs.createReadStream('./hello-world.txt', { encoding: 'utf-8' })
+const writeStream = fs.createWriteStream('./hello.txt', { encoding: 'utf-8' })
+
+readStream.on('data', (data) => {
+    console.log(data);
+
+    writeStream.write(data, (err) => {
+        if (err) {
+            throw Error("Error:", err);
+        }
+    })
 })
 
-fs.readFile('./hello-world.txt', { encoding: 'utf-8' }, (err, data) => {
+readStream.on("error", (err) => {
     if (err) {
-        console.log('something went wrong', err);
-        return;
+        throw Error("Error:", err);
     }
-    text = data;
+})
 
-    console.log(text, 'inside callback');
-});
+writeStream.on('error', (err) => {
+    if (err) {
+        throw Error("Error:", err);
+    }
+})
 
-console.log(text, 'from console');
+readStream.on('end', () => {
+    console.log('reading ended');
+    writeStream.end();
+})
 
-console.log('task-3');
+writeStream.on('finish', () => {
+    console.log('written successfully');
+})

@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Buy groceries",
+    "description": "Milk, eggs, bread, and fruits",
+    "dueDate": "2023-12-01"
+  },
+  {
+    "title": "Finish project report",
+    "description": "Submit the final draft to the team",
+    "dueDate": "2023-11-15"
+  },
+  {
+    "title": "Call mom",
+    "description": "Wish her for her birthday",
+    "dueDate": "2023-11-20"
+  },
+  {
+    "title": "express",
+    "description": "learning express",
+    "createdAt": "5/30/2025, 10:51:28 PM"
+  },
+  {
+    "title": "express",
+    "description": "learning express",
+    "createdAt": "5/30/2025, 11:05:02 PM"
+  },
+  {
+    "title": "mongodb",
+    "description": "learning mongodb",
+    "createdAt": "5/30/2025, 11:06:14 PM"
+  },
+  {
+    "title": "next js",
+    "description": "learning next js",
+    "createdAt": "5/30/2025, 11:07:31 PM"
+  }
+]
