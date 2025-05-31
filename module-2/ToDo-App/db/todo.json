@@ -10,24 +10,14 @@
     "dueDate": "2023-11-15"
   },
   {
-    "title": "Call mom",
-    "description": "Wish her for her birthday",
-    "dueDate": "2023-11-20"
-  },
-  {
     "title": "express",
-    "description": "learning express",
+    "description": "learning advanced express again",
     "createdAt": "5/30/2025, 10:51:28 PM"
   },
   {
     "title": "express",
     "description": "learning express",
     "createdAt": "5/30/2025, 11:05:02 PM"
-  },
-  {
-    "title": "mongodb",
-    "description": "learning mongodb",
-    "createdAt": "5/30/2025, 11:06:14 PM"
   },
   {
     "title": "next js",
