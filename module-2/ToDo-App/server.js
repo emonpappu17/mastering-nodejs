@@ -19,16 +19,7 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, {
             "content-type": "application/json",
         })
-
-        // res.end({
-        //     "id": 2025
-        // });
-
-        // res.setHeader("content-type", "text/plain");
-        // res.setHeader("email", "ph2@gmail.com")
-        // res.statusCode = 201;
-
-        // res.end(JSON.stringify(data));
+        
         res.end(
             data
         );
