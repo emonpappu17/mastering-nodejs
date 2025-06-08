@@ -242,15 +242,49 @@
 
 ///////////////////////////////////////////////// lws -> lecture 21
 
-const express = require('express');
-const adminRoute = require('./adminRouter')
-const publicRouter = require('./publicRouter');
+// const express = require('express');
+// const adminRoute = require('./adminRouter')
+// const publicRouter = require('./publicRouter');
 
+// const app = express();
+
+// app.use('/admin', adminRoute);
+// app.use('/', publicRouter);
+
+// app.listen(3000, () => {
+//     console.log('listing on port 3000');
+// })
+
+////////////////////////////////// lws -> lecture 22
+
+const express = require("express");
 const app = express();
 
-app.use('/admin', adminRoute);
-app.use('/', publicRouter);
+app.get("/", (req, res) => {
+    // res.send('Hello world');
+    // throw new Error("there was an error!");
+    res.send(a)
+
+})
+
+// 404 error handler
+app.use((req, res, next) => { // ulta plata url diya client side diya try korle ai middleware ta fire hobe
+    // res.send("Request url was not found!")
+    next("Request url was not found!")
+})
+
+app.use((err, req, res, next) => { // synchoranus code a server side error hobe aita run hobe.  ai middleware sobar seshe dite hobe
+
+    // console.log(err);
+    // res.send('There was an error!')
+
+    if (err.message) {
+        res.status(500).send(err.message);
+    } else {
+        res.status(500).send('There was an error!')
+    }
+})
 
 app.listen(3000, () => {
-    console.log('listing on port 3000');
+    console.log('app listening at port 3000');
 })
