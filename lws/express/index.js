@@ -257,31 +257,223 @@
 
 ////////////////////////////////// lws -> lecture 22
 
-const express = require("express");
+// const express = require("express");
+// const app = express();
+
+// app.get("/", (req, res) => {
+//     // res.send('Hello world');
+//     // throw new Error("there was an error!");
+//     // res.send(a)
+
+//     for (let i = 0; i <= 10; i++) {
+//         if (i === 5) {
+//             next('there was an error!')
+//         } else {
+//             res.write('a');
+//         }
+//     }
+//     res.end();
+// })
+
+// // 404 error handler
+// app.use((req, res, next) => { // ulta plata url diya client side diya try korle ai middleware ta fire hobe
+//     // res.send("Request url was not found!")
+//     next("Request url was not found!")
+// })
+
+// app.use((err, req, res, next) => { // synchoranus code a server side error hobe aita run hobe.  ai middleware sobar seshe dite hobe
+//     // console.log(err);
+//     // res.send('There was an error!')
+
+//     // if (err.message) {
+//     //     res.status(500).send(err.message);
+//     // } else {
+//     //     res.status(500).send('There was an error!')
+//     // }
+
+//     if (res.headersSent) {
+//         next('There was a problem!'); // invisible error handler er kase chole jay
+//     } else {
+//         if (err.message) {
+//             res.status(500).send(err.message);
+//         } else {
+//             res.send("There was an error!")
+//         }
+//     }
+// })
+
+// invisible default error handler
+// app.use((err, req, res, next) => {
+//     // handle error here
+// })
+
+// app.listen(3000, () => {
+//     console.log('app listening at port 3000');
+// })
+
+
+// const express = require("express");
+// const fs = require('fs');
+// const app = express();
+
+// app.get('/', [
+//     (req, res, next) => {
+//         // fs.readFile("/file-does-not-exist", (err, data) => {
+//         //     if (err) {
+//         //         next(err); // next call kora mane direct invisible error handler er kase chole jabe
+//         //     } else {
+//         //         res.send(data);
+//         //     }
+//         // })
+
+//         // setTimeout(() => {
+//         //     try {
+//         //         console.log(a);
+//         //     } catch (err) {
+//         //         next(err); // next call kora mane direct invisible error handler er kase chole jabe
+//         //     }
+//         //     // console.log(a); // server crash korbe
+//         // }, 100);
+
+//         fs.readFile("/file-does-not-exist", 'utf-8', (err, data) => {
+//             console.log(data);
+//             next(err)
+//             // console.log(data.property); // server crash korbe
+//         })
+//     },
+//     (req, res, next) => {
+//         console.log('knk nk');
+//         console.log(data.property);
+//     }
+// ])
+
+// app.use((req, res, next) => {
+//     console.log('I am not called!');
+//     next();
+// })
+
+// // custom error handler
+// app.use((err, req, res, next) => {
+//     if (res.headersSent) {
+//         next('There was a problem!'); // invisible error handler er kase chole jay
+//     } else {
+//         if (err.message) {
+//             res.status(500).send(err.message);
+//         } else {
+//             res.send("There was an error!")
+//         }
+//     }
+// })
+
+// app.listen(3000, () => {
+//     console.log('app listening at port 3000');
+// })
+
+///////////////////////////////////////////// lws -> lecture 23
+
+const express = require('express');
+const multer = require("multer");
+const path = require("path")
+
+// console.log(path.extname);
+
+// File upload folder
+const UPLOADS_FOLDER = "./uploads";
+
+// define the storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, UPLOADS_FOLDER);
+    },
+    filename: (req, file, cb) => {
+        // Important File.pdf => important-file-1345134634.pdf
+        const fileExt = path.extname(file.originalname);
+        const fileName = file.originalname
+            .replace(fileExt, "")
+            .toLowerCase()
+            .split(" ")
+            .join("-") + "-" + Date.now();
+        cb(null, fileName + fileExt);
+    }
+})
+
+// prepare the final multer upload object
+const upload = multer({
+    // dest: UPLOADS_FOLDER,
+    storage: storage,
+    // limits: {
+    //     fileSize: 1000000 // 1MB
+    // },
+    fileFilter: (req, file, cb) => {
+        // console.log(file);
+        if (file.fieldname === "avatar") {
+            if (
+                file.mimetype === "image/png" ||
+                file.mimetype === "image/jpg" ||
+                file.mimetype === "image/jpeg"
+            ) {
+                cb(null, true);
+            } else {
+                // cb(null, false);
+                cb(new Error("Only jpg .png or .jpeg format allowed!"));
+            }
+        } else if (file.fieldname === "doc") {
+            console.log('called');
+            if (file.mimetype === "application/pdf") {
+                cb(null, true);
+            } else {
+                cb(new Error("Only .pdf format allowed!"));
+            }
+        } else {
+            cb(new Error("There was an unknown error!"))
+        }
+    }
+});
+
 const app = express();
 
-app.get("/", (req, res) => {
-    // res.send('Hello world');
-    // throw new Error("there was an error!");
-    res.send(a)
+// app.post('/', upload.single('avatar'), (req, res) => {
+//     res.send('Hello world')
+// })
 
+// app.post('/', upload.array('avatar', 3), (req, res) => {
+//     res.send('Hello world')
+// })
+
+// const uploadMiddleware = upload.fields([
+//     { name: 'avatar', maxCount: 1 },
+//     { name: 'gallery', maxCount: 3 }
+// ])
+
+const uploadMiddleware = upload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'doc', maxCount: 1 }
+])
+
+// app.post('/', uploadMiddleware, (req, res) => {
+//     res.send('Hello world')
+// })
+
+// application route
+app.post('/', uploadMiddleware, (req, res) => {
+    console.log(req.files);
+    res.send('Hello world')
 })
 
-// 404 error handler
-app.use((req, res, next) => { // ulta plata url diya client side diya try korle ai middleware ta fire hobe
-    // res.send("Request url was not found!")
-    next("Request url was not found!")
-})
+// app.post('/', upload.none(), (req, res) => {
+//     res.send('Hello world')
+// })
 
-app.use((err, req, res, next) => { // synchoranus code a server side error hobe aita run hobe.  ai middleware sobar seshe dite hobe
-
-    // console.log(err);
-    // res.send('There was an error!')
-
-    if (err.message) {
-        res.status(500).send(err.message);
+// default error handler
+app.use((err, req, res, next) => {
+    if (err) {
+        if (err instanceof multer.MulterError) {
+            res.status(500).send('There was an upload error!');
+        } else {
+            res.status(500).send(err.message);
+        }
     } else {
-        res.status(500).send('There was an error!')
+        res.send("success");
     }
 })
 
