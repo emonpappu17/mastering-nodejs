@@ -1,5 +1,7 @@
 import { model, Schema } from "mongoose";
 import { INotes } from "../interfaces/notes.interface";
+import validator from 'validator'
+
 
 const noteSchema = new Schema<INotes>(
     {
@@ -19,8 +21,17 @@ const noteSchema = new Schema<INotes>(
         tags: {
             label: { type: String, required: true },
             color: { type: String, default: 'gray' }
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User', // export const User = model<IUser>("User", userSchema); // always model er nam use korte hobe  "User" model er nam
+            required: true
         }
-    }, { versionKey: false, timestamps: true }
+    },
+    {
+        versionKey: false,
+        timestamps: true
+    }
 )
 
 export const Note = model<INotes>('Note', noteSchema);
