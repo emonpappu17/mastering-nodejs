@@ -1,10 +1,13 @@
 import express, { Request, Response } from "express";
 import { Note } from "../models/notes.model";
+import bcrypt from "bcryptjs";
 
 export const notesRoutes = express.Router()
 
 notesRoutes.post('/create-note', async (req: Request, res: Response) => {
     const body = req.body
+   
+
     // Approach - 1 of creating a data
     // const myNote = new Note({
     //     title: 'Learning Express',

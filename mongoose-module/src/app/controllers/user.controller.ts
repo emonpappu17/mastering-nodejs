@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { Note } from "../models/notes.model";
 import { User } from "../models/user.model";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 export const usersRoutes = express.Router()
 
@@ -21,6 +22,22 @@ usersRoutes.post('/create-user', async (req: Request, res: Response) => {
 
         const body = req.body;
 
+        // const password = await bcrypt.hash(body.password, 10)
+        // console.log('password->', password);
+        // body.password = password;
+
+        // const user = await User.create(body); // static method
+
+        // Built in and custom instance methods
+        // const user = new User(body)
+        // const password = await user.hashPassword(body.password) //custom instance methods
+        // user.password = password
+        // await user.save() // instance method
+
+        // Built in and custom static methods // most of the time this will be used
+        const password = await User.hashPassword(body.password)
+        console.log('static->', password);
+        body.password = password
         const user = await User.create(body);
 
         res.status(201).json({
