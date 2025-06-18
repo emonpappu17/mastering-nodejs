@@ -17,27 +17,22 @@ const CreateUserZodSchema = z.object({
 
 usersRoutes.post('/create-user', async (req: Request, res: Response) => {
     try {
-        // const body = req.body
+        const body = req.body
         // const zodBody = await CreateUserZodSchema.parseAsync(req.body)
 
-        const body = req.body;
-
         // const password = await bcrypt.hash(body.password, 10)
-        // console.log('password->', password);
         // body.password = password;
-
         // const user = await User.create(body); // static method
 
         // Built in and custom instance methods
-        // const user = new User(body)
-        // const password = await user.hashPassword(body.password) //custom instance methods
-        // user.password = password
-        // await user.save() // instance method
+        //  const user = new User(body)
+        //  const password = await user.hashPassword(body.password) //custom instance methods
+        //  user.password = password
+        //  await user.save() // instance method
 
         // Built in and custom static methods // most of the time this will be used
-        const password = await User.hashPassword(body.password)
-        console.log('static->', password);
-        body.password = password
+        // const password = await User.hashPassword(body.password) // static method
+        // body.password = password
         const user = await User.create(body);
 
         res.status(201).json({
@@ -56,7 +51,28 @@ usersRoutes.post('/create-user', async (req: Request, res: Response) => {
 })
 
 usersRoutes.get('/', async (req: Request, res: Response) => {
-    const users = await User.find();
+    const userEmail = req.query.email ? req.query.email : ""
+    let users = []
+
+    // Filtering
+    // if (userEmail) {
+    //     users = await User.find({ email: userEmail });
+    // } else {
+    //     users = await User.find();
+    // }
+
+    // Sorting
+    // users = await User.find().sort({ "email": 'asc' });
+    // users = await User.find().sort({ "email": 'desc' });
+    // users = await User.find().sort({ "email": 1 });
+    // users = await User.find().sort({ "email": -1 });
+
+    // Skipping
+    // users = await User.find().skip(5)
+
+    // Limiting
+    users = await User.find().limit(2)
+
     res.status(201).json({
         success: true,
         message: "all users retrived successfully",
@@ -76,7 +92,8 @@ usersRoutes.get('/:userId', async (req: Request, res: Response) => {
 
 usersRoutes.delete('/:userId', async (req: Request, res: Response) => {
     const userId = req.params.userId
-    const user = await User.findByIdAndDelete(userId)
+    // const user = await User.findByIdAndDelete(userId)
+    const user = await User.findOneAndDelete({ _id: userId })
     res.status(201).json({
         success: true,
         message: "user deleted successfully",
